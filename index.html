@@ -11,7 +11,7 @@
       <label for="task">Nouvelle tâche :</label>
       <input type="text" id="task" name="task">
       <br>
-      <label for="deadline">Délai :</label>
+      <label for="deadline">Date de fin :</label>
       <input type="date" id="deadline" name="deadline">
       <br>
       <button id="ajt" type="button" onclick="addTask()">Ajouter</button>
@@ -85,10 +85,9 @@
         for (let i = 0; i < tasks.length; i++) {
           let task = tasks[i];
           let li = document.createElement("li");
-          li.innerHTML = task.name + " - Délai : " + task.deadline.toDateString();
+          li.innerHTML = task.name + " - Date de fin : " + task.deadline.toLocaleDateString();
           let timeLeft = document.createElement("span");
           timeLeft.innerHTML = getTimeLeft(task.deadline);
-          li.appendChild(timeLeft);
           taskList.appendChild(li);
         }
       }
@@ -209,5 +208,6 @@
     padding: 10px;
     border-radius: 5px;
     background-color: #f2f2f2;
+    text-align: center;
     }
 </style>
