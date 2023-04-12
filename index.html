@@ -91,54 +91,41 @@
           taskList.appendChild(li);
         }
       }
-      
-      // Fonction pour calculer le temps restant jusqu'au délai d'une tâche
-      function getTimeLeft(deadline) {
-        let now = new Date();
-        let timeDiff = deadline - now;
-        
-        // Convertir la différence de temps en jours, heures, minutes et secondes
-        let daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        let hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minsLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        let secsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-      }
-
         // Fonction pour mettre à jour le temps restant toutes les secondes
-        function updateTimers() {
-        // Parcourir toutes les tâches et mettre à jour leur temps restant
-        for (let i = 0; i < tasks.length; i++) {
+      function updateTimers() {
+      // Parcourir toutes les tâches et mettre à jour leur temps restant
+      for (let i = 0; i < tasks.length; i++) {
             let task = tasks[i];
             let li = document.getElementById("task" + i);
             let timeLeft = li.querySelector("span");
             timeLeft.innerHTML = getTimeLeft(task.deadline);
         }
-        }
+      }
 
-        // Démarrer le timer
-        let intervalId;
-        function startTimer() {
-        // Désactiver le bouton de démarrage si le timer est déjà en cours
-        if (intervalId) {
-            return;
-        }
-        
-        // Mettre à jour le temps restant toutes les secondes
-        intervalId = setInterval(updateTimers, 1000);
-        }
+      // Démarrer le timer
+      let intervalId;
+      function startTimer() {
+      // Désactiver le bouton de démarrage si le timer est déjà en cours
+      if (intervalId) {
+          return;
+      }
+      
+      // Mettre à jour le temps restant toutes les secondes
+      intervalId = setInterval(updateTimers, 1000);
+      }
 
-        // Mettre en pause le timer
-        function pauseTimer() {
-        clearInterval(intervalId);
-        intervalId = null;
-        }
+      // Mettre en pause le timer
+      function pauseTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      }
 
-        // Réinitialiser le timer
-        function resetTimer() {
-        clearInterval(intervalId);
-        intervalId = null;
-        updateTimers();
-        }
+      // Réinitialiser le timer
+      function resetTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+      updateTimers();
+      }
     </script>
   </body>
 </html>
