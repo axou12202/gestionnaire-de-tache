@@ -45,6 +45,7 @@
           deadline: new Date(deadlineInput.value)
         };
         tasks.push(task);
+        //ajoutbdd(task);
         
         // Réinitialiser les champs du formulaire
         taskInput.value = "";
@@ -86,6 +87,8 @@
           let task = tasks[i];
           let li = document.createElement("li");
           li.innerHTML = task.name + " - Date de fin : " + task.deadline.toLocaleDateString();
+          var str = task.deadline.toISOString();
+          str.split()
           let timeLeft = document.createElement("span");
           timeLeft.innerHTML = getTimeLeft(task.deadline);
           taskList.appendChild(li);
@@ -102,30 +105,28 @@
         }
       }
 
-      // Démarrer le timer
-      let intervalId;
-      function startTimer() {
-      // Désactiver le bouton de démarrage si le timer est déjà en cours
-      if (intervalId) {
-          return;
-      }
-      
-      // Mettre à jour le temps restant toutes les secondes
-      intervalId = setInterval(updateTimers, 1000);
-      }
 
-      // Mettre en pause le timer
-      function pauseTimer() {
-      clearInterval(intervalId);
-      intervalId = null;
-      }
+      function ajoutbdd(task){
+            var formData = {
+              nom: $(task.name).val(),
+              date: $(task.deadline.toLocaleDateString()).val(),
+            };
 
-      // Réinitialiser le timer
-      function resetTimer() {
-      clearInterval(intervalId);
-      intervalId = null;
-      updateTimers();
-      }
+            console.log(formData);
+
+            $.ajax({
+              type: "POST",
+              url: "ajout.php",
+              data: formData,
+              dataType: "json",
+              encode: true,
+            }).done(function (data) {
+              console.log(data);
+            });
+
+            event.preventDefault();
+          };
+
     </script>
   </body>
 </html>
