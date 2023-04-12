@@ -14,7 +14,11 @@
       <label for="deadline">Délai :</label>
       <input type="date" id="deadline" name="deadline">
       <br>
-      <button type="button" onclick="addTask()">Ajouter</button>
+      <button id="ajt" type="button" onclick="addTask()">Ajouter</button>
+      <br>      
+      <label for="deadline">Nom de la tâche à supprimée :</label>
+      <input type="text" id="taskdel" name="taskdel">
+      <button id="sup" type="button" onclick="delTask()">Supprimer</button>
     </form>
     
     <!-- Liste des tâches ajoutées -->
@@ -48,6 +52,28 @@
         
         // Mettre à jour la liste des tâches
         updateTaskList();
+      }
+
+      function delTask(){
+        let tasknum = document.getElementById("taskdel")
+        dTask(tasknum.value);
+        return;
+      }
+      
+      function dTask(elem) {
+      let taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      if (elem !== "") {
+        for (let i = 0; i < tasks.length; i++) {
+          let task = tasks[i];
+          if (task.name === elem) {
+            tasks.splice(i, 1);
+            break; // stop iterating once the task is found and removed
+          }
+        }
+      }
+      updateTaskList();
       }
       
       // Fonction pour mettre à jour la liste des tâches
@@ -152,14 +178,24 @@
     width: 200px;
     }
 
-    button[type="button"] {
+    #ajt {
     background-color: #4CAF50;
     color: white;
     }
 
-    button[type="button"]:hover {
+    #ajt:hover {
     cursor: pointer;
     background-color: #3e8e41;
+    }    
+    
+    #sup {
+    background-color: rgb(153, 43, 16);
+    color: white;
+    }
+
+    #sup:hover {
+    cursor: pointer;
+    background-color: rgb(153, 43, 16);
     }
 
     ul {
