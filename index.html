@@ -11,10 +11,14 @@
       <label for="task">Nouvelle tâche :</label>
       <input type="text" id="task" name="task">
       <br>
-      <label for="deadline">Délai :</label>
+      <label for="deadline">Date de fin :</label>
       <input type="date" id="deadline" name="deadline">
       <br>
-      <button type="button" onclick="addTask()">Ajouter</button>
+      <button id="ajt" type="button" onclick="addTask()">Ajouter</button>
+      <br>      
+      <label for="deadline">Nom de la tâche à supprimée :</label>
+      <input type="text" id="taskdel" name="taskdel">
+      <button id="sup" type="button" onclick="delTask()">Supprimer</button>
     </form>
     
     <!-- Liste des tâches ajoutées -->
@@ -41,6 +45,7 @@
           deadline: new Date(deadlineInput.value)
         };
         tasks.push(task);
+        //ajoutbdd(task);
         
         // Réinitialiser les champs du formulaire
         taskInput.value = "";
@@ -48,6 +53,28 @@
         
         // Mettre à jour la liste des tâches
         updateTaskList();
+      }
+
+      function delTask(){
+        let tasknum = document.getElementById("taskdel")
+        dTask(tasknum.value);
+        return;
+      }
+      
+      function dTask(elem) {
+      let taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      if (elem !== "") {
+        for (let i = 0; i < tasks.length; i++) {
+          let task = tasks[i];
+          if (task.name === elem) {
+            tasks.splice(i, 1);
+            break; // stop iterating once the task is found and removed
+          }
+        }
+      }
+      updateTaskList();
       }
       
       // Fonction pour mettre à jour la liste des tâches
@@ -59,61 +86,47 @@
         for (let i = 0; i < tasks.length; i++) {
           let task = tasks[i];
           let li = document.createElement("li");
-          li.innerHTML = task.name + " - Délai : " + task.deadline.toDateString();
+          li.innerHTML = task.name + " - Date de fin : " + task.deadline.toLocaleDateString();
+          var str = task.deadline.toISOString();
+          str.split()
           let timeLeft = document.createElement("span");
           timeLeft.innerHTML = getTimeLeft(task.deadline);
-          li.appendChild(timeLeft);
           taskList.appendChild(li);
         }
       }
-      
-      // Fonction pour calculer le temps restant jusqu'au délai d'une tâche
-      function getTimeLeft(deadline) {
-        let now = new Date();
-        let timeDiff = deadline - now;
-        
-        // Convertir la différence de temps en jours, heures, minutes et secondes
-        let daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        let hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minsLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        let secsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-      }
-
         // Fonction pour mettre à jour le temps restant toutes les secondes
-        function updateTimers() {
-        // Parcourir toutes les tâches et mettre à jour leur temps restant
-        for (let i = 0; i < tasks.length; i++) {
+      function updateTimers() {
+      // Parcourir toutes les tâches et mettre à jour leur temps restant
+      for (let i = 0; i < tasks.length; i++) {
             let task = tasks[i];
             let li = document.getElementById("task" + i);
             let timeLeft = li.querySelector("span");
             timeLeft.innerHTML = getTimeLeft(task.deadline);
         }
-        }
+      }
 
-        // Démarrer le timer
-        let intervalId;
-        function startTimer() {
-        // Désactiver le bouton de démarrage si le timer est déjà en cours
-        if (intervalId) {
-            return;
-        }
-        
-        // Mettre à jour le temps restant toutes les secondes
-        intervalId = setInterval(updateTimers, 1000);
-        }
 
-        // Mettre en pause le timer
-        function pauseTimer() {
-        clearInterval(intervalId);
-        intervalId = null;
-        }
+      function ajoutbdd(task){
+            var formData = {
+              nom: $(task.name).val(),
+              date: $(task.deadline.toLocaleDateString()).val(),
+            };
 
-        // Réinitialiser le timer
-        function resetTimer() {
-        clearInterval(intervalId);
-        intervalId = null;
-        updateTimers();
-        }
+            console.log(formData);
+
+            $.ajax({
+              type: "POST",
+              url: "ajout.php",
+              data: formData,
+              dataType: "json",
+              encode: true,
+            }).done(function (data) {
+              console.log(data);
+            });
+
+            event.preventDefault();
+          };
+
     </script>
   </body>
 </html>
@@ -152,14 +165,24 @@
     width: 200px;
     }
 
-    button[type="button"] {
+    #ajt {
     background-color: #4CAF50;
     color: white;
     }
 
-    button[type="button"]:hover {
+    #ajt:hover {
     cursor: pointer;
     background-color: #3e8e41;
+    }    
+    
+    #sup {
+    background-color: rgb(153, 43, 16);
+    color: white;
+    }
+
+    #sup:hover {
+    cursor: pointer;
+    background-color: rgb(153, 43, 16);
     }
 
     ul {
@@ -173,5 +196,6 @@
     padding: 10px;
     border-radius: 5px;
     background-color: #f2f2f2;
+    text-align: center;
     }
 </style>
