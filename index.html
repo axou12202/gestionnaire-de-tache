@@ -90,7 +90,6 @@
           var str = task.deadline.toISOString();
           str.split()
           let timeLeft = document.createElement("span");
-          timeLeft.innerHTML = getTimeLeft(task.deadline);
           taskList.appendChild(li);
         }
       }
@@ -101,7 +100,6 @@
             let task = tasks[i];
             let li = document.getElementById("task" + i);
             let timeLeft = li.querySelector("span");
-            timeLeft.innerHTML = getTimeLeft(task.deadline);
         }
       }
 
