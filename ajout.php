@@ -30,9 +30,10 @@ catch(PDOException $e){
     echo "Erreur : " . $e->getMessage();
     die;
 }
+
 function addtask($id,$budget,$itineraire,$date_livraison){
     global $mysqlClient;
-    $sqlQuery1 = "INSERT INTO tache (nom, dates) VALUES ('$nom', '$date')";
+    $sqlQuery1 = "INSERT INTO tache (nom, dates) VALUES ('$nom', convert(varchar, '$date',3))";
     $recipesStatement = $mysqlClient->prepare($sqlQuery1);
     $recipesStatement->execute();
   }
